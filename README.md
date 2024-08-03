@@ -1,11 +1,10 @@
 ## TODO
 
-- [ ] Make it deploy (vercel)
-- [ ] Scaffold basic UI with mock data
-- [ ] Tiddy up build process
-- [ ] Set up a database (vercel postgres)
-- [ ] Attach database to UI
-- [ ] Add authenticate (w/ Clerk)
+- [x] Make it deploy (vercel)
+- [x] Scaffold basic UI with mock data
+- [x] Set up a database (firebase)
+- [x] Attach database to UI
+- [x] Add authenticate (w/ Clerk)
 - [ ] Add image upload
 - [ ] "taint" (server-only)
 - [ ] Use Next/Image component

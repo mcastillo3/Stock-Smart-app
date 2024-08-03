@@ -1,4 +1,4 @@
-import { firestore } from "@/firebase";
+import { firestore } from "../../../server/firebase";
 import {
   collection,
   deleteDoc,
@@ -33,15 +33,23 @@ export async function POST(request) {
   return NextResponse.json({ message: "Item added to pantry" });
 }
 
+export async function PUT(request) {
+  const { itemName, count } = await request.json();
+  const docRef = doc(collection(firestore, "Pantry"), itemName);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    await updateDoc(docRef, { count });
+  } else {
+    await setDoc(docRef, { count });
+  }
+
+  return NextResponse.json({ message: "Item updated in pantry" });
+}
+
 export async function DELETE(request) {
   const { itemName } = await request.json();
   const docRef = doc(collection(firestore, "Pantry"), itemName);
-  const docSnap = await getDoc(docRef);
-  if (docSnap.exists()) {
-    await updateDoc(docRef, { count: docSnap.data().count - 1 });
-  }
-  if (docSnap.data().count === 0) {
-    await deleteDoc(docRef);
-  }
+  await deleteDoc(docRef);
   return NextResponse.json({ message: "Item deleted from pantry" });
 }
