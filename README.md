@@ -6,7 +6,7 @@
 - [x] Attach database to UI
 - [x] Add authenticate (w/ Clerk)
 - [ ] "taint" (server-only)
-- [ ] Implement AI recipe search (OpenRouter)
+- [x] Implement AI recipe search (OpenRouter)
 - [ ] Error management (w/ Sentry)
 - [ ] Analytics (posthog)
 - [x] Delete button (w/ Server actions)
