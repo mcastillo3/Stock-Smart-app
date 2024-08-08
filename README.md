@@ -5,13 +5,10 @@
 - [x] Set up a database (firebase)
 - [x] Attach database to UI
 - [x] Add authenticate (w/ Clerk)
-- [ ] Add image upload
 - [ ] "taint" (server-only)
-- [ ] Use Next/Image component
+- [ ] Implement AI recipe search (OpenRouter)
 - [ ] Error management (w/ Sentry)
-- [ ] Routing/image page (parralel page)
-- [ ] Set up ShadUI (toast)
-- [ ] Update upload button
 - [ ] Analytics (posthog)
-- [ ] Delete button (w/ Server actions)
+- [x] Delete button (w/ Server actions)
 - [ ] Ratelimiting (upstash)
+- [ ] Add scanning image upload

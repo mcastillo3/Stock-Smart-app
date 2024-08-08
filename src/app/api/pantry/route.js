@@ -1,55 +1,92 @@
-import { firestore } from "../../../server/firebase";
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
 import { NextResponse } from "next/server";
+import { getAuth } from "@clerk/nextjs/server";
+import {
+  addPantryItem,
+  getPantryItems,
+  updatePantryItem,
+  deletePantryItem,
+} from "../../../server/firestore";
 
-export async function GET() {
-  const snapshot = query(collection(firestore, "Pantry"));
-  const docs = await getDocs(snapshot);
-  const pantryList = [];
-  docs.forEach((doc) => {
-    pantryList.push({ name: doc.id, ...doc.data() });
-  });
-  return NextResponse.json(pantryList);
+export async function GET(request) {
+  const { userId } = getAuth(request);
+
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const items = await getPantryItems(userId);
+    return NextResponse.json({ pantryItems: items });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Error fetching pantry items" },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(request) {
-  const { itemName } = await request.json();
-  const docRef = doc(collection(firestore, "Pantry"), itemName);
-  const docSnap = await getDoc(docRef);
-  if (docSnap.exists()) {
-    await updateDoc(docRef, { count: docSnap.data().count + 1 });
-  } else {
-    await setDoc(docRef, { count: 1 });
+  const { userId } = getAuth(request);
+
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  return NextResponse.json({ message: "Item added to pantry" });
+
+  try {
+    const { itemName } = await request.json();
+    const newItem = await addPantryItem(userId, { name: itemName, count: 1 });
+    return NextResponse.json({
+      message: "Item added to pantry",
+      item: newItem,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Error adding pantry item" },
+      { status: 500 }
+    );
+  }
 }
 
 export async function PUT(request) {
-  const { itemName, count } = await request.json();
-  const docRef = doc(collection(firestore, "Pantry"), itemName);
-  const docSnap = await getDoc(docRef);
+  const { userId } = getAuth(request);
 
-  if (docSnap.exists()) {
-    await updateDoc(docRef, { count });
-  } else {
-    await setDoc(docRef, { count });
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  return NextResponse.json({ message: "Item updated in pantry" });
+  try {
+    const { itemName, count } = await request.json();
+    const updatedItem = await updatePantryItem(userId, {
+      name: itemName,
+      count,
+    });
+    return NextResponse.json({
+      message: "Item updated in pantry",
+      item: updatedItem,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Error updating pantry item" },
+      { status: 500 }
+    );
+  }
 }
 
 export async function DELETE(request) {
-  const { itemName } = await request.json();
-  const docRef = doc(collection(firestore, "Pantry"), itemName);
-  await deleteDoc(docRef);
-  return NextResponse.json({ message: "Item deleted from pantry" });
+  const { userId } = getAuth(request);
+
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const { itemName } = await request.json();
+    await deletePantryItem(userId, { name: itemName });
+    return NextResponse.json({ message: "Item deleted from pantry" });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Error deleting pantry item" },
+      { status: 500 }
+    );
+  }
 }

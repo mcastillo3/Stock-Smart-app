@@ -13,17 +13,11 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import KitchenIcon from "@mui/icons-material/Kitchen";
-import {
-  FilterCenterFocus,
-  Inventory,
-  MenuBook,
-  Store,
-} from "@mui/icons-material";
+import { FilterCenterFocus, MenuBook, Store } from "@mui/icons-material";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 const navItems = [
   { text: "Pantry", href: "/pantry", icon: <KitchenIcon /> },
-  { text: "Inventory", href: "/inventory", icon: <Inventory /> },
   { text: "Recipes", href: "/recipes", icon: <MenuBook /> },
   { text: "Scan", href: "/scan", icon: <FilterCenterFocus /> },
 ];

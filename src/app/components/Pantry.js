@@ -9,7 +9,6 @@ import { useTheme } from "@mui/material/styles";
 export default function Pantry() {
   const [pantryList, setPantryList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const theme = useTheme();
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = useCallback(() => setIsModalOpen(false), []);
@@ -18,6 +17,7 @@ export default function Pantry() {
     const response = await fetch("/api/pantry");
     const data = await response.json();
     setPantryList(data);
+    console.log("fetchData", data);
   }, []);
 
   useEffect(() => {
@@ -37,17 +37,6 @@ export default function Pantry() {
     },
     [fetchData]
   );
-
-  const handleDeleteItem = async (itemName) => {
-    await fetch("/api/pantry", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ itemName }),
-    });
-    fetchData();
-  };
 
   const handleUpdate = useCallback(
     async (name, newCount) => {
@@ -79,16 +68,8 @@ export default function Pantry() {
 
   return (
     <Box display="flex" flexDirection="column" gap={2} p={3}>
-      <Box
-        sx={{
-          alignSelf: "flex-start",
-        }}
-      >
-        <Typography
-          variant="h4"
-          color={theme.palette.primary.contrastText}
-          textAlign="center"
-        >
+      <Box maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Typography variant="h3" component="h1" gutterBottom>
           Pantry Items
         </Typography>
       </Box>
@@ -103,11 +84,7 @@ export default function Pantry() {
         </Button>
       </Box>
 
-      <PantryList
-        pantryList={pantryList}
-        handleDeleteItem={handleDeleteItem}
-        onUpdate={handleUpdate}
-      />
+      <PantryList pantryList={pantryList} onUpdate={handleUpdate} />
     </Box>
   );
 }
